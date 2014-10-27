@@ -23,7 +23,7 @@ Time spent: `12 hrs`
 #### Optional
 
 - [ ] Search results page
-   - [ ] Infinite scroll for restaurant results
+   - [x] Infinite scroll for restaurant results
    - [ ] Implement map view of restaurant results
 - [ ] Filter page
    - [ ] Radius filter should expand as in the real Yelp app
