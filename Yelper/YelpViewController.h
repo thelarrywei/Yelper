@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "FilterViewController.h"
 
-@interface YelpViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchControllerDelegate, FilterViewControllerDelegate>
+@interface YelpViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIScrollViewDelegate, FilterViewControllerDelegate>
 
 @end

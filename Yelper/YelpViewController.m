@@ -20,7 +20,7 @@ NSString * const kYelpTokenSecret = @"ydJ0x_UAKBS5UZTFkKLGW4BFpL0";
 @interface YelpViewController ()
 @property (nonatomic, strong) YelpClient *client;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) NSArray *businesses;
+@property (nonatomic, strong) NSMutableArray *businesses;
 @property (nonatomic, strong) NSString *geolocation;
 
 
@@ -60,6 +60,7 @@ NSString * const kYelpTokenSecret = @"ydJ0x_UAKBS5UZTFkKLGW4BFpL0";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.businesses = [[NSMutableArray alloc]init];
     
     //configure the navigation bar
     self.navigationController.navigationBar.barTintColor = [UIColor redColor];
@@ -99,6 +100,42 @@ NSString * const kYelpTokenSecret = @"ydJ0x_UAKBS5UZTFkKLGW4BFpL0";
 }
 
 //SEARCH BAR STUFF
+
+
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    float scrollViewHeight = scrollView.frame.size.height;
+    NSLog(@"scrollViewHeight, %f", scrollViewHeight);
+    float scrollContentSizeHeight = scrollView.contentSize.height;
+    NSLog(@"scrollContentSizeHeight, %f", scrollContentSizeHeight);
+    float scrollOffset = scrollView.contentOffset.y;
+    NSLog(@"scrollOffset, %f", scrollContentSizeHeight);
+    
+    if (scrollOffset + scrollViewHeight == scrollContentSizeHeight)
+    {
+        NSLog(@"Reached to bottom");
+        [self updateSearchTerm];
+        
+        [self.client searchWithTerm:self.searchTerm geo:self.geolocation offset:[NSString stringWithFormat: @"%ld", self.businesses.count] success:^(AFHTTPRequestOperation *operation, id response) {
+            //get the response and load it into an array of Businesses
+            //NSLog(@"response: %@", response);
+            
+            NSArray *businessDictionaries = response[@"businesses"];
+            
+            //NSLog(@"%@", businessDictionaries);
+            NSArray *businesses = [BusinessObject businessesWithDictionaries:businessDictionaries];
+            for (int i = 0; i < businesses.count; i++) {
+                [self.businesses addObject:businesses[i]];
+            }
+            [self.tableView reloadData];
+            NSLog(@"Number of Businesses: %ld", self.businesses.count);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"error: %@", [error description]);
+        }];
+
+        
+    }
+}
 -(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.searchBar resignFirstResponder];
     [self.searchBar setShowsCancelButton:NO];
