@@ -26,9 +26,17 @@
         else {
             neighborhood = [dictionary valueForKeyPath:@"location.neighborhoods"][0];
         }
-        self.address = [NSString stringWithFormat:@"%@, %@",
+        NSLog(@"DEBUG: 1.0");
+        if ( [[dictionary valueForKeyPath:@"location.address"] count] == 0) {
+            NSLog(@"Debug: 1.1");
+            self.address = neighborhood;
+        }
+        else {
+            NSLog(@"DEBUG: 1.2");
+            self.address = [NSString stringWithFormat:@"%@, %@",
                         [dictionary valueForKeyPath:@"location.address"][0],
                         neighborhood];
+        }
         //NSLog(@"Address: %@", self.address);
         NSArray *categories = dictionary[@"categories"];
         //NSLog(@"Categories: %@", categories);

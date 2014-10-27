@@ -209,6 +209,7 @@ NSString * const kYelpTokenSecret = @"ydJ0x_UAKBS5UZTFkKLGW4BFpL0";
     
     
     if ([[filters[@"category_filter"] allObjects] count] > 0) {
+        NSLog(@"NUMBER OF CATEGORIES: %ld", [[filters[@"category_filter"] allObjects] count]);
         NSString *categories = [[filters[@"category_filter"] allObjects] componentsJoinedByString:@","];
         [searchTerms setObject:categories forKey:@"category_filter"];
     }
@@ -229,11 +230,16 @@ NSString * const kYelpTokenSecret = @"ydJ0x_UAKBS5UZTFkKLGW4BFpL0";
     [self.client searchWithFilters:searchTerms success:^(AFHTTPRequestOperation *operation, id response) {
         //get the response and load it into an array of Businesses
         //NSLog(@"response: %@", response);
-        NSArray *businessDictionaries = response[@"businesses"];
-        //NSLog(@"%@", businessDictionaries);
-        self.businesses = [BusinessObject businessesWithDictionaries:businessDictionaries];
-        [self.tableView reloadData];
-        NSLog(@"Number of Businesses: %ld", self.businesses.count);
+        NSLog(@"***************CHECKPOINT 1");
+        //NSLog(@"Response: %@", response);
+        
+            NSArray *businessDictionaries = response[@"businesses"];
+            //NSLog(@"%@", businessDictionaries);
+            self.businesses = [BusinessObject businessesWithDictionaries:businessDictionaries];
+            NSLog(@"***************CHECKPOINT 2");
+            [self.tableView reloadData];
+            NSLog(@"Number of Businesses: %ld", self.businesses.count);
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error: %@", [error description]);
     }];
